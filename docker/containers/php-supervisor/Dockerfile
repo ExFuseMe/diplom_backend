@@ -45,9 +45,9 @@ RUN mkdir -p /usr/src/php/ext/redis \
     && echo 'redis' >> /usr/src/php-available-exts \
     && docker-php-ext-install redis
 
-########################## Add sail User ##########################
-RUN groupadd --gid $GID sail \
-  && useradd --uid $UID --gid www-data --shell /bin/bash --create-home sail
+########################## Add api User ##########################
+RUN groupadd --gid $GID api \
+  && useradd --uid $UID --gid www-data --shell /bin/bash --create-home api
 
 ########################## SUPERVISOR ##########################
 RUN mkdir -p /var/log/supervisor
