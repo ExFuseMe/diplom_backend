@@ -14,4 +14,9 @@ class AuthService
 
         return User::where('email', $validated['email'])->first();
     }
+
+    public function getUserInstance()
+    {
+        return auth()->user();
+    }
 }

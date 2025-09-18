@@ -13,12 +13,7 @@ class LoginResource extends JsonResource
         $token = $user->createToken('auth_token')->plainTextToken;
         return [
             'token' => $token,
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->roles()->first()->name,
-            ],
+            'user' => new UserResource($user),
         ];
     }
 }
