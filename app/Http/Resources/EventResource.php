@@ -15,6 +15,7 @@ class EventResource extends JsonResource
             'title' => $this->resource->title,
             'description' => $this->resource->description,
             'address' => $this->resource->address,
+            'date_time' => Carbon::parse($this->resource->date_time)->timestamp,
             'created_at' => Carbon::parse($this->resource->created_at)->timestamp,
             'updated_at' => Carbon::parse($this->resource->updated_at)->timestamp,
             'deleted_at' => $this->when($this->resource->deleted_at, function () {

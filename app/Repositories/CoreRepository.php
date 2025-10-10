@@ -27,7 +27,7 @@ abstract class CoreRepository
 
     public function search(string $term)
     {
-        $query = $this->startConditions();
+        $query = $this->startConditions()->newQuery();
 
         foreach ($this->getSearchableFields() as $field) {
             $query->orWhere($field, 'ILIKE', "%{$term}%");
