@@ -23,7 +23,7 @@ class AuthController extends Controller
             return new LoginResource($user);
         }
 
-        throw ValidationException::withMessages(['email' => __('auth.failed')]);
+        throw ValidationException::withMessages(['error' => __('auth.failed')]);
     }
 
     public function me(AuthService $authService): UserResource

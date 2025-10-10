@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Services\EventService;
@@ -25,40 +26,44 @@ class EventController extends Controller
         $direction = $request->query('direction', 'desc');
 
 
-        $events = $eventService->listEvents($search, $perPage, $orderBy, $direction);
+        $events = $eventService->list($search, $perPage, $orderBy, $direction);
 
         return EventResource::collection($events);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreEventRequest $request)
+    public function store(StoreEventRequest $request, EventService $eventService)
     {
-        //
+        $this->authorize('create', Event::class);
+        $validated = $request->validated();
+
+        $event = $eventService->create($validated);
+
+        return new EventResource($event);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Event $event)
+    public function show(Event $event, EventService $eventService)
     {
-        //
+        $this->authorize('view', $event);
+
+        $event = $eventService->view($event->id);
+
+        return new EventResource($event);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Event $event)
+    public function update(UpdateEventRequest $request, Event $event, EventService $eventService)
     {
-        //
-    }
+        $this->authorize('update', $event);
+        $validated = $request->validated();
+        $eventService->update($validated, $event);
+        $event = Event::find($event->id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Event $event)
+        return new EventResource($event);
+    }
+    public function destroy(Event $event, EventService $eventService)
     {
-        //
+        $this->authorize('delete', $event);
+        $eventService->delete($event);
+
+        return response()->noContent();
     }
 }

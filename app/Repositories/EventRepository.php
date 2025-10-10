@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Event as Model;
+
 class EventRepository extends CoreRepository
 {
     protected function getModelClass(): string
@@ -12,6 +13,11 @@ class EventRepository extends CoreRepository
 
     public function list(string $search = '', $perPage = 10, $orderBy = 'created_at', $direction = 'desc')
     {
-        return $this->search($search)->paginate($perPage);
+        return $this->search($search)->orderBy($orderBy, $direction)->paginate($perPage);
+    }
+
+    public function show(int $eventId)
+    {
+        return $this->startConditions()->findOrFail($eventId);
     }
 }

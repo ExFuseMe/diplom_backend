@@ -12,7 +12,7 @@ class StoreEventRequest extends FormRequest
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'date_time' => ['required', 'datetime'],
+            'date_time' => ['required', 'date'],
         ];
     }
 }
