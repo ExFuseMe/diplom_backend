@@ -5,17 +5,15 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class EventFormFieldResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
-            'second_name' => $this->resource->second_name,
-            'last_name' => $this->resource->last_name,
-            'email' => $this->resource->email,
-            'role' => $this->resource->roles()->first()->name,
+            'type' => $this->resource->type,
+            'required' => $this->resource->required,
         ];
     }
 }
