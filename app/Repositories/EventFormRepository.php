@@ -20,4 +20,11 @@ class EventFormRepository extends CoreRepository
     {
         return $this->startConditions()->with(['fields'])->findOrFail($eventFormId);
     }
+
+    public function getByEventId(int $id)
+    {
+        return $this->startConditions()
+            ->where('event_id', $id)
+            ->with(['fields'])->paginate();
+    }
 }

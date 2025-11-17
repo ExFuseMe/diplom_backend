@@ -39,7 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
                 ValidationException::class => response()->json(
                     [
-                        'error' => $e->getMessage()
+                        'error' => $e->errors()
                     ],
                     400
                 ),

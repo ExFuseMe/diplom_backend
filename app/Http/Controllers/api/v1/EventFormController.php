@@ -9,6 +9,7 @@ use App\Http\Resources\EventFormResource;
 use App\Models\Event;
 use App\Models\EventForm;
 use App\Services\EventFormService;
+use App\Services\EventService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -66,5 +67,12 @@ class EventFormController extends Controller
 
         $eventForm->delete();
         return response(null, 204);
+    }
+
+    public function eventForms(Event $event, EventService $eventService)
+    {
+        $this->authorize('viewAny', EventForm::class);
+
+        $eventService->getEventForms($event);
     }
 }

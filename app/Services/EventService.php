@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Event;
+use App\Repositories\EventFormRepository;
 use App\Repositories\EventRepository;
 
 class EventService
@@ -38,5 +39,12 @@ class EventService
     public function delete(Event $event): ?bool
     {
         return $event->delete();
+    }
+
+    public function getEventForms(Event $event)
+    {
+        $repository = new EventFormRepository();
+
+        return $repository->getByEventId($event->id);
     }
 }
