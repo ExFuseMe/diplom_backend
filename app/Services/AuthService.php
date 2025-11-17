@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -17,17 +18,27 @@ class AuthService
         return User::where('email', $validated['email'])->first();
     }
 
-    public function getUserInstance()
+    public function getUserInstance(): User|Authenticatable|null
     {
         return auth()->user();
     }
 
     public function registerUser(array $validated)
     {
-        try{
+        try {
             DB::beginTransaction();
-            return User::create($validated);
-        }catch (\Exception $e){
+            $user = User::create($validated);
+            if (!empty($validated['avatar'])) {
+                $user->addMediaFromRequest('avatar')
+                    ->usingFileName(
+                        sha1(
+                            $validated['avatar']->getClientOriginalName() . microtime()
+                        ) . '.' . $validated['avatar']->getClientOriginalExtension()
+                    )
+                    ->toMediaCollection('avatar');
+            }
+            return $user;
+        } catch (\Exception $e) {
             DB::rollBack();
             return false;
         }
@@ -42,7 +53,7 @@ class AuthService
 
         if ($code != $cacheValue) {
             return false;
-        }else{
+        } else {
             Cache::forget(md5($validated['email']));
             $user->update(['email_verified_at' => now()]);
             return $user;

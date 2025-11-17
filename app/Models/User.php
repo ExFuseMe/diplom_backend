@@ -7,14 +7,18 @@ use App\Mail\RegisterMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -43,21 +47,29 @@ class User extends Authenticatable
         ];
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')->singleFile();
+    }
+
+
     protected static function booted(): void
     {
         parent::booted();
 
         static::created(function ($user) {
 
-            $user->assignRole(RoleConsts::STUDENT);
+            if (!Config::get('app.is_seeding')){
+                $user->assignRole(RoleConsts::STUDENT);
 
-            $cacheKey = md5($user->email);
+                $cacheKey = md5($user->email);
 
-            $code = random_int(100000, 999999);
+                $code = random_int(100000, 999999);
 
-            Cache::put($cacheKey, $code, now()->addMinutes(10));
+                Cache::put($cacheKey, $code, now()->addMinutes(10));
 
-            Mail::to($user->email)->send(new RegisterMail($code));
+                Mail::to($user->email)->send(new RegisterMail($code));
+            }
         });
     }
 }

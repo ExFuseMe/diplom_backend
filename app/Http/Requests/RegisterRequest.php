@@ -18,6 +18,7 @@ class RegisterRequest extends FormRequest
             'birthday' => ['required', 'date', 'before:today'],
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', 'min:8'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
         ];
     }
 }
