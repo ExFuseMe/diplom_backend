@@ -73,6 +73,7 @@ class EventFormController extends Controller
     {
         $this->authorize('viewAny', EventForm::class);
 
-        $eventService->getEventForms($event);
+        $forms = $eventService->getEventForms($event);
+        return EventFormResource::collection($forms);
     }
 }
