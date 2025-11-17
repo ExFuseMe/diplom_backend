@@ -9,14 +9,14 @@ use App\Repositories\EventRepository;
 class EventService
 {
     public function list(
-        string $search = '',
+        array $filterFields = [],
         int $perPage = 10,
         string $orderBy = 'created_at',
         string $sortBy = 'desc'
     ) {
         $repository = new EventRepository();
 
-        return $repository->list($search, $perPage, $orderBy, $sortBy);
+        return $repository->list($filterFields, $perPage, $orderBy, $sortBy);
     }
 
     public function create(array $validated)

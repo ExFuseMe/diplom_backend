@@ -3,30 +3,33 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
+use App\Http\Requests\Events\EventFilterRequest;
+use App\Http\Requests\Events\StoreEventRequest;
+use App\Http\Requests\Events\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Services\EventService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class EventController extends Controller
 {
     use AuthorizesRequests;
 
 
-    public function index(Request $request, EventService $eventService)
+    public function index(EventFilterRequest $request, EventService $eventService)
     {
         $this->authorize('viewAny', Event::class);
 
-        $search = $request->get('search', '');
-        $perPage = $request->query('perPage', 10);
-        $orderBy = $request->query('orderBy', 'created_at');
-        $direction = $request->query('direction', 'desc');
+        $validated = $request->validated();
+        $filterFields = Arr::except($validated, ['perPage', 'orderBy', 'direction']);
+
+        $perPage = empty($validated['perPage']) ? 10 : $validated['perPage'];
+        $orderBy = empty($validated['orderBy']) ? 'created_at' : $validated['orderBy'];
+        $direction = empty($validated['direction']) ? 'desc' : $validated['direction'];
 
 
-        $events = $eventService->list($search, $perPage, $orderBy, $direction);
+        $events = $eventService->list($filterFields, $perPage, $orderBy, $direction);
 
         return EventResource::collection($events);
     }
@@ -59,6 +62,7 @@ class EventController extends Controller
 
         return new EventResource($event);
     }
+
     public function destroy(Event $event, EventService $eventService)
     {
         $this->authorize('delete', $event);

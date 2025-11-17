@@ -49,11 +49,14 @@ return Application::configure(basePath: dirname(__DIR__))
                     500
                 ),
 
-                default => response()->json([
-                    'error' => app()->environment('production') ? __(
-                        'http-statuses.500'
-                    ) : $e->getMessage(),
-                ], 500)
+                default => match (app()->environment()) {
+                    'production' => response()->json([
+                        'error' => app()->environment('production') ? __(
+                            'http-statuses.500'
+                        ) : $e->getMessage(),
+                    ], 500),
+                    'local' => throw $e,
+                }
             };
         });
     })->create();

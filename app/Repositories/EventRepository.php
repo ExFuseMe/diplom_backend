@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Filters\EventFilter;
 use App\Models\Event as Model;
 
 class EventRepository extends CoreRepository
@@ -11,9 +12,12 @@ class EventRepository extends CoreRepository
         return Model::class;
     }
 
-    public function list(string $search = '', $perPage = 10, $orderBy = 'created_at', $direction = 'desc')
+    public function list(array $filterFields = [], $perPage = 10, $orderBy = 'created_at', $direction = 'desc')
     {
-        return $this->search($search)->orderBy($orderBy, $direction)->paginate($perPage);
+        $filter = app()->make(EventFilter::class, ['queryParams' => array_filter($filterFields)]);
+
+
+        return $this->startConditions()->filter($filter)->orderBy($orderBy, $direction)->paginate($perPage);
     }
 
     public function show(int $eventId)
