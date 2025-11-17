@@ -7,19 +7,15 @@
 <body style="margin: 0; padding: 0; background: #F5F5F5; font-family: Arial, sans-serif;">
 
 <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 8px; color: #444444;">
-
-    <!-- Заголовок -->
     <h1 style="margin: 0 0 24px 0; font-size: 26px; font-weight: bold; color: #1C1C1C; text-align: left;">
         Регистрация на платформе
     </h1>
 
-    <!-- Текст -->
     <p style="font-size: 16px; line-height: 1.5; color: #595959; margin-bottom: 24px;">
         Вы успешно зарегистрировались на платформе <strong style="color:#1C1C1C;">ПрофУчёт</strong>.
         Для завершения регистрации необходимо подтвердить ваш email.
     </p>
 
-    <!-- Блок с кодом -->
     <div style="
         background: #EAE5FB;
         border: 1px solid #A181FF;
@@ -33,8 +29,6 @@
             {{$code}}
         </div>
     </div>
-
-    <!-- Завершение -->
     <p style="font-size: 14px; color: #7F7F7F;">
         Если вы не совершали никаких действий — просто удалите это письмо.
     </p>
