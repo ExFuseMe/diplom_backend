@@ -10,6 +10,8 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Services\EventService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 
 class EventController extends Controller
@@ -17,7 +19,7 @@ class EventController extends Controller
     use AuthorizesRequests;
 
 
-    public function index(EventFilterRequest $request, EventService $eventService)
+    public function index(EventFilterRequest $request, EventService $eventService): AnonymousResourceCollection
     {
         $this->authorize('viewAny', Event::class);
 
@@ -34,7 +36,7 @@ class EventController extends Controller
         return EventResource::collection($events);
     }
 
-    public function store(StoreEventRequest $request, EventService $eventService)
+    public function store(StoreEventRequest $request, EventService $eventService): EventResource
     {
         $this->authorize('create', Event::class);
         $validated = $request->validated();
@@ -44,7 +46,7 @@ class EventController extends Controller
         return new EventResource($event);
     }
 
-    public function show(Event $event, EventService $eventService)
+    public function show(Event $event, EventService $eventService): EventResource
     {
         $this->authorize('view', $event);
 
@@ -53,7 +55,7 @@ class EventController extends Controller
         return new EventResource($event);
     }
 
-    public function update(UpdateEventRequest $request, Event $event, EventService $eventService)
+    public function update(UpdateEventRequest $request, Event $event, EventService $eventService): EventResource
     {
         $this->authorize('update', $event);
         $validated = $request->validated();
@@ -63,7 +65,7 @@ class EventController extends Controller
         return new EventResource($event);
     }
 
-    public function destroy(Event $event, EventService $eventService)
+    public function destroy(Event $event, EventService $eventService): Response
     {
         $this->authorize('delete', $event);
         $eventService->delete($event);
