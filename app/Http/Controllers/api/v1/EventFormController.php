@@ -12,11 +12,14 @@ use App\Services\EventFormService;
 use App\Services\EventService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class EventFormController extends Controller
 {
     use AuthorizesRequests;
-    public function index(Request $request, EventFormService $eventFormService)
+
+    public function index(Request $request, EventFormService $eventFormService): AnonymousResourceCollection
     {
         $this->authorize('viewAny', EventForm::class);
 
@@ -31,7 +34,7 @@ class EventFormController extends Controller
         return EventFormResource::collection($forms);
     }
 
-    public function store(StoreEventFormRequest $request, EventFormService $eventFormService)
+    public function store(StoreEventFormRequest $request, EventFormService $eventFormService): EventFormResource
     {
         $this->authorize('create', Event::class);
 
@@ -50,8 +53,11 @@ class EventFormController extends Controller
         return new EventFormResource($eventForm);
     }
 
-    public function update(UpdateEventFormRequest $request, EventForm $eventForm, EventFormService $eventFormService)
-    {
+    public function update(
+        UpdateEventFormRequest $request,
+        EventForm $eventForm,
+        EventFormService $eventFormService
+    ): EventFormResource {
         $this->authorize('update', $eventForm);
 
         $validated = $request->validated();
@@ -61,7 +67,7 @@ class EventFormController extends Controller
     }
 
 
-    public function destroy(EventForm $eventForm)
+    public function destroy(EventForm $eventForm): Response
     {
         $this->authorize('delete', $eventForm);
 
@@ -69,7 +75,7 @@ class EventFormController extends Controller
         return response(null, 204);
     }
 
-    public function eventForms(Event $event, EventService $eventService)
+    public function eventForms(Event $event, EventService $eventService): AnonymousResourceCollection
     {
         $this->authorize('viewAny', EventForm::class);
 
